@@ -1,3 +1,6 @@
+
+
+
 // import {
 //   Component,
 //   signal,
@@ -7,6 +10,7 @@
 // import { isPlatformBrowser } from '@angular/common';
 // import { PLATFORM_ID } from '@angular/core';
 // import { ContactComponent } from './contact/contact.component';
+// import { LanguageService } from './services/language.service';
 
 // @Component({
 //   selector: 'app-root',
@@ -18,16 +22,16 @@
 // export class AppComponent implements AfterViewInit {
 //   protected readonly title = signal('call-center-landing');
 
-//   // نستخدمه عشان نعرف إحنا على الـ browser ولا على الـ server
 //   private platformId = inject(PLATFORM_ID);
+//   lang = inject(LanguageService); // نستخدمه في HTML
 
 //   ngAfterViewInit(): void {
-//     // لو الكود شغال على السيرفر (SSR) ما نشغّلش الأنيميشن ولا الـ typing
-//     if (!isPlatformBrowser(this.platformId)) {
-//       return;
-//     }
+//     if (!isPlatformBrowser(this.platformId)) return;
 
-//     // ===== IntersectionObserver للأنيميشن (animate-up) =====
+//     // لغة البداية
+//     this.lang.setLang('en');
+
+//     // ===== IntersectionObserver للأنيميشن =====
 //     const animatedElements = document.querySelectorAll<HTMLElement>('.animate-up');
 
 //     const observer = new IntersectionObserver(
@@ -35,18 +39,16 @@
 //         entries.forEach((entry) => {
 //           if (entry.isIntersecting) {
 //             entry.target.classList.add('in-view');
-//             obs.unobserve(entry.target); // نوقف المراقبة بعد أول مرة
+//             obs.unobserve(entry.target);
 //           }
 //         });
 //       },
-//       {
-//         threshold: 0.2, // يبدأ لما ~20% من العنصر يبقى ظاهر
-//       }
+//       { threshold: 0.2 }
 //     );
 
 //     animatedElements.forEach((el) => observer.observe(el));
 
-//     // ===== Typing effect في الـ Hero =====
+//     // ===== Typing effect في الـ Hero (تقدر تسيبه إنجليزي) =====
 //     const typedSpan = document.getElementById('typed-text');
 //     if (typedSpan) {
 //       const phrases = [
@@ -63,18 +65,15 @@
 //         const current = phrases[phraseIndex];
 
 //         if (!isDeleting) {
-//           // كتابة
 //           typedSpan.textContent = current.substring(0, charIndex + 1);
 //           charIndex++;
 
 //           if (charIndex === current.length) {
-//             // خلصت الكلمة
 //             isDeleting = true;
-//             setTimeout(typeLoop, 1200); // استنى قبل ما تمسح
+//             setTimeout(typeLoop, 1200);
 //             return;
 //           }
 //         } else {
-//           // مسح
 //           typedSpan.textContent = current.substring(0, charIndex - 1);
 //           charIndex--;
 
@@ -88,10 +87,16 @@
 //         setTimeout(typeLoop, speed);
 //       };
 
-//       setTimeout(typeLoop, 500); // تأخير بسيط قبل أول كلمة
+//       setTimeout(typeLoop, 500);
 //     }
 //   }
+
+
+  
 // }
+
+
+
 import {
   Component,
   signal,
@@ -116,6 +121,17 @@ export class AppComponent implements AfterViewInit {
   private platformId = inject(PLATFORM_ID);
   lang = inject(LanguageService); // نستخدمه في HTML
 
+  // حالة منيو الموبايل
+  isNavOpen = false;
+
+  toggleNav() {
+    this.isNavOpen = !this.isNavOpen;
+  }
+
+  closeNav() {
+    this.isNavOpen = false;
+  }
+
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -139,7 +155,7 @@ export class AppComponent implements AfterViewInit {
 
     animatedElements.forEach((el) => observer.observe(el));
 
-    // ===== Typing effect في الـ Hero (تقدر تسيبه إنجليزي) =====
+    // ===== Typing effect في الـ Hero =====
     const typedSpan = document.getElementById('typed-text');
     if (typedSpan) {
       const phrases = [
@@ -182,3 +198,4 @@ export class AppComponent implements AfterViewInit {
     }
   }
 }
+
